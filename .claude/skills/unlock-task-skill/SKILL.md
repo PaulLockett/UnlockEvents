@@ -15,11 +15,13 @@ description: |
 ## Workflow Overview
 
 ```
-1. TASK SELECTION → Query Monday.com, present options, confirm choice
-2. RESEARCH       → Exa search for relevant docs/patterns
-3. PLANNING       → Discuss approach, identify artifacts needed
-4. EXECUTION      → Load karpathy-guidelines, implement systematically
-5. COMPLETION     → Update Monday.com, link artifacts, close out
+1. TASK SELECTION    → Query Monday.com, present options, confirm choice
+2. RESEARCH          → Exa search for relevant docs/patterns
+3. PLANNING          → Discuss approach, identify artifacts needed
+4. EXECUTION         → Load karpathy-guidelines, implement systematically
+5. VERIFY & APPROVE  → Review criteria, ASK user before marking complete
+6. COMPLETION        → Update Monday.com status, link artifacts
+7. TECHNICAL NOTES   → Document decisions, gotchas, context for future tasks
 ```
 
 ---
@@ -234,7 +236,27 @@ For each required artifact:
 - "Where did the tests land?"
 - etc.
 
-### Update Monday.com
+### ASK BEFORE MARKING COMPLETE
+
+**CRITICAL: Do NOT mark the task as Done in Monday.com without explicit user approval.**
+
+Present a completion summary and ask:
+
+```
+All acceptance criteria verified. Ready to mark A1 complete?
+
+Artifacts to link:
+- GitHub Repo: [url]
+- PR: [url if applicable]
+
+Before I update Monday.com to "Done", please confirm:
+1. Are all criteria actually met?
+2. Anything else we should address first?
+```
+
+Wait for explicit "yes" / "go ahead" / approval before updating status.
+
+### Update Monday.com (after approval)
 
 1. Status to "Done":
 
@@ -266,7 +288,29 @@ mutation {
 }
 ```
 
-3. Add any technical notes worth remembering
+### Post-Completion: Update Technical Notes
+
+**REQUIRED after every task completion.** Update the Technical Notes field (`long_text_mm01srya`) with:
+
+1. **Architecture/Design Decisions** - What choices were made and why
+2. **Key Implementation Details** - Important patterns, libraries, configurations
+3. **Gotchas Encountered** - Problems hit and how they were solved
+4. **Dependencies Created** - What future tasks now depend on from this work
+
+This provides context for future tasks that build on this one.
+
+```graphql
+mutation {
+  change_column_value(
+    board_id: 18397622627
+    item_id: [TASK_ID]
+    column_id: "long_text_mm01srya"
+    value: "{\"text\": \"[TECHNICAL_NOTES_CONTENT]\"}"
+  ) {
+    id
+  }
+}
+```
 
 ### Close out
 
@@ -277,6 +321,8 @@ Artifacts:
 - PR: [link]
 - Tests: [link]
 - Docs: [link if applicable]
+
+Technical notes updated in Monday.com.
 
 Next on critical path: [suggest based on dependencies]
 
