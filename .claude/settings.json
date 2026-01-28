@@ -1,0 +1,9 @@
+{
+  "enabledPlugins": {
+    "rlm@rlm-cli": true,
+    "github@claude-plugins-official": true,
+    "supabase@claude-plugins-official": true,
+    "gopls-lsp@claude-plugins-official": true,
+    "typescript-lsp@claude-plugins-official": true
+  }
+}
