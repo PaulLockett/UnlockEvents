@@ -16,12 +16,13 @@ description: |
 
 ```
 1. TASK SELECTION    → Query Monday.com, present options, confirm choice
-2. RESEARCH          → Exa search for relevant docs/patterns
-3. PLANNING          → Discuss approach, identify artifacts needed
-4. EXECUTION         → Load karpathy-guidelines, implement systematically
-5. VERIFY & APPROVE  → Review criteria, ASK user before marking complete
-6. COMPLETION        → Update Monday.com status, link artifacts
-7. TECHNICAL NOTES   → Document decisions, gotchas, context for future tasks
+2. GATHER CONTEXT    → Fetch technical notes from dependency/integration tasks
+3. RESEARCH          → Exa search for relevant docs/patterns
+4. PLANNING          → Discuss approach, identify artifacts needed
+5. EXECUTION         → Load karpathy-guidelines, implement systematically
+6. VERIFY & APPROVE  → Review criteria, ASK user before marking complete
+7. COMPLETION        → Update Monday.com status, link artifacts
+8. TECHNICAL NOTES   → Document decisions, gotchas, context for future tasks
 ```
 
 ---
@@ -81,7 +82,81 @@ Key columns: Status (`color_mm01wx9b`), Critical Path (`color_mm018m9k`), Descri
 
 ---
 
-## Phase 2: Research
+## Phase 2: Gather Context from Dependencies
+
+**REQUIRED before starting work.** Fetch and present technical notes from tasks this one depends on or integrates with.
+
+### Task Dependency Map
+
+| Task | Depends On | Integrates With |
+| ---- | ---------- | --------------- |
+| A1   | —          | —               |
+| A2   | A1         | —               |
+| A3   | A1, A2     | —               |
+| U1   | A1         | —               |
+| U2   | A1         | —               |
+| U3   | A1         | —               |
+| R1   | A2         | —               |
+| R2   | A2         | —               |
+| R3   | A2         | —               |
+| E1   | R1, U1     | R3              |
+| E2   | U2         | R3              |
+| E3   | R2         | —               |
+| M1   | E1, E2, E3 | R1, R2, R3, U3  |
+| M2   | R2, E3     | —               |
+| C1   | M1, M2     | R2              |
+| C2   | C1         | —               |
+| C3   | R1         | —               |
+| T1   | M1, C1     | All             |
+| T2   | T1         | All             |
+| T3   | A3, T2     | All             |
+
+### Fetch technical notes
+
+For the current task, identify all tasks in "Depends On" and "Integrates With" columns, then query their Technical Notes:
+
+```graphql
+query {
+  boards(ids: 18397622627) {
+    items_page(limit: 50, query_params: { ids: [DEPENDENCY_IDS] }) {
+      items {
+        id
+        name
+        column_values(ids: ["long_text_mm01srya"]) {
+          id
+          text
+          value
+        }
+      }
+    }
+  }
+}
+```
+
+### Present context summary
+
+Before proceeding to research, present the relevant context:
+
+```
+📋 Context from dependent tasks:
+
+**A1: Project Setup** (depends on)
+- Turborepo + pnpm monorepo structure
+- DevContainer with Node 20, Python 3.12, Go 1.22
+- Temporal Cloud for workflows, Supabase Cloud for DB
+- [key decisions relevant to current task...]
+
+**R1: Source Access** (integrates with)
+- [relevant technical notes...]
+
+This context informs our approach. Proceeding to research phase.
+```
+
+If a dependency task has no technical notes, flag it: "⚠️ [Task] has no technical notes—may need to review its implementation directly."
+
+---
+
+## Phase 3: Research
 
 Before implementation, gather current technical context using Exa.
 
@@ -112,7 +187,7 @@ Ask: "Based on this research, I'm thinking [approach]. Does that match what you 
 
 ---
 
-## Phase 3: Planning
+## Phase 4: Planning
 
 ### Display task details from Monday.com
 
@@ -145,7 +220,7 @@ State: "For this task, we need to produce: [list]"
 
 ---
 
-## Phase 4: Execution
+## Phase 5: Execution
 
 ### CRITICAL: Load karpathy-guidelines before writing code
 
@@ -213,7 +288,7 @@ Paul's context-switching depletes willpower. To help:
 
 ---
 
-## Phase 5: Completion
+## Phase 6: Completion
 
 ### Verify ALL acceptance criteria
 
