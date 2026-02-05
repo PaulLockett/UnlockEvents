@@ -28,5 +28,5 @@ export { withRetry } from "./retry.js";
 export type { RetryOptions } from "./retry.js";
 
 // Re-export key Ax primitives so consumers import from us
-export { ax, s, flow, agent, ai } from "@ax-llm/ax";
-export type { AxGen, AxSignature, AxProgram, AxFlow, AxAgent } from "@ax-llm/ax";
+export { ax, s, flow, agent, ai, AxGen, AxSignature } from "@ax-llm/ax";
+export type { AxProgram, AxFlow, AxAgent } from "@ax-llm/ax";

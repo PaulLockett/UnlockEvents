@@ -74,3 +74,4 @@ coverage/
 *.tgz
 *.tar.gz
 .cache/
+tasks/lessons.md
