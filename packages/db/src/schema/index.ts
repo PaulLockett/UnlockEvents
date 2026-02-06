@@ -47,3 +47,14 @@ export {
   type MatchReasons,
   type FieldWeights,
 } from "./dedup.js";
+
+export {
+  experiment,
+  experimentBudget,
+  analysisRequest,
+  experimentOutcome,
+  type ExperimentPhase,
+  type ExperimentStatus,
+  type BudgetStrategy,
+  type AnalysisRequestStatus,
+} from "./experiment.js";
