@@ -2,9 +2,13 @@ name: CI
 
 on:
   push:
-    branches: [main, develop]
+    branches: [main]
   pull_request:
-    branches: [main, develop]
+    branches: [main]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
   lint-format-typecheck:
@@ -39,6 +43,7 @@ jobs:
   test:
     name: Test
     runs-on: ubuntu-latest
+    needs: lint-format-typecheck
 
     steps:
       - name: Checkout
@@ -60,3 +65,48 @@ jobs:
         run: pnpm test
         env:
           OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
+          EXA_API_KEY: ${{ secrets.EXA_API_KEY }}
+          HONCHO_API_KEY: ${{ secrets.HONCHO_API_KEY }}
+
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    needs: lint-format-typecheck
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "pnpm"
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build all packages and services
+        run: pnpm build
+
+  supabase-migrations:
+    name: Supabase Migration Check
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request'
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Supabase CLI
+        uses: supabase/setup-cli@v1
+        with:
+          version: latest
+
+      - name: Verify migrations are valid
+        run: supabase db lint --schema public
+        env:
+          SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
