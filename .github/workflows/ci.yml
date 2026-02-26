@@ -92,21 +92,5 @@ jobs:
       - name: Build all packages and services
         run: pnpm build
 
-  supabase-migrations:
-    name: Supabase Migration Check
-    runs-on: ubuntu-latest
-    if: github.event_name == 'pull_request'
-
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Setup Supabase CLI
-        uses: supabase/setup-cli@v1
-        with:
-          version: latest
-
-      - name: Verify migrations are valid
-        run: supabase db lint --schema public
-        env:
-          SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+  # Migration validation is handled by Supabase's GitHub integration
+  # (shows as "Supabase Preview" check on PRs)
