@@ -41,8 +41,8 @@ export async function adjudicatePair(
       {
         role: "user",
         content: JSON.stringify({
-          eventA: { id: a.id, title: a.title, startDate: a.startDate, location: a.location },
-          eventB: { id: b.id, title: b.title, startDate: b.startDate, location: b.location },
+          eventA: { id: a.id, title: a.title, startsAt: a.startsAt },
+          eventB: { id: b.id, title: b.title, startsAt: b.startsAt },
         }),
       },
     ],

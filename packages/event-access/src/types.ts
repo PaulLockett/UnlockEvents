@@ -8,15 +8,31 @@
 
 export type EventStatus = "ingested" | "published" | "cancelled" | "consolidated";
 
-export interface EventRecord {
-  id: string;
+export interface EventData {
   title: string;
   description: string | null;
-  startDate: string;
-  endDate: string | null;
-  location: string | null;
+  startsAt: string;
+  endsAt: string | null;
+  timezone: string;
+  isFree?: boolean;
+  registrationUrl?: string | null;
+  imageUrl?: string | null;
+  metadata?: Record<string, unknown>;
+}
+
+export interface EventRecord {
+  id: string;
+  tenantId: string;
+  title: string;
+  description: string | null;
+  startsAt: string;
+  endsAt: string | null;
+  timezone: string;
   sourceId: string;
   status: EventStatus;
+  isFree: boolean;
+  registrationUrl: string | null;
+  imageUrl: string | null;
   canonicalId: string | null;
   createdAt: string;
 }
@@ -30,11 +46,7 @@ export interface EventSchedule {
 
 export interface EventAccess {
   /** New event enters from the extraction pipeline. Returns event key (UUID). */
-  ingestEvent(
-    tenantId: string,
-    sourceId: string,
-    eventData: Omit<EventRecord, "id" | "status" | "canonicalId" | "createdAt">
-  ): Promise<string>;
+  ingestEvent(tenantId: string, sourceId: string, eventData: EventData): Promise<string>;
 
   /** Event becomes visible to consumers. */
   publishEvent(tenantId: string, eventId: string): Promise<void>;
