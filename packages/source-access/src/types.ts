@@ -10,11 +10,16 @@ export type SourceStatus = "pending" | "active" | "inactive" | "retired";
 
 export interface SourceRecord {
   id: string;
+  tenantId: string;
   name: string;
   url: string;
   status: SourceStatus;
+  category: string;
+  platform: string | null;
+  feedUrl: string | null;
   failureCount: number;
   lastNavigatedAt: string | null;
+  nextNavigateAt: string | null;
   createdAt: string;
 }
 
@@ -22,13 +27,21 @@ export interface NavigationBrief {
   sourceId: string;
   name: string;
   url: string;
+  feedUrl: string | null;
+  category: string;
+  crawlConfig: Record<string, unknown>;
   lastNavigatedAt: string | null;
   failureCount: number;
 }
 
 export interface SourceAccess {
   /** A new event environment enters the system for discovery. Returns source key (UUID). */
-  onboardSource(tenantId: string, name: string, url: string): Promise<string>;
+  onboardSource(
+    tenantId: string,
+    name: string,
+    url: string,
+    options?: { category?: string; platform?: string; feedUrl?: string }
+  ): Promise<string>;
 
   /** Source goes live for active discovery cycles. */
   commissionSource(tenantId: string, sourceId: string): Promise<void>;
