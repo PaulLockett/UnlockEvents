@@ -1,6 +1,7 @@
 export type {
   EventAccess,
   EventAccessConfig,
+  EventData,
   EventRecord,
   EventStatus,
   EventSchedule,
