@@ -92,8 +92,13 @@ jobs:
       - name: Build all packages and services
         run: pnpm build
 
-  # Railway PR environments are created automatically by Railway's GitHub integration.
-  # This job waits for Railway to finish deploying and reports the result.
+  # Railway PR environments are created automatically by Railway's GitHub integration
+  # when a PR targets the trigger branch (main). Railway forks the base environment
+  # (production) and deploys the PR branch into it.
+  #
+  # This job polls for Railway commit statuses and reports success/failure.
+  # On the first PR (before services exist on main), Railway won't create
+  # a PR environment — the job will complete with a warning.
   railway-preview:
     name: Railway Preview
     runs-on: ubuntu-latest
@@ -105,11 +110,10 @@ jobs:
         uses: actions/github-script@v7
         with:
           script: |
-            const prNumber = context.payload.pull_request.number;
-            const maxAttempts = 30;
+            const maxAttempts = 15;
             const delayMs = 20000;
 
-            core.info(`Checking Railway deployment status for PR #${prNumber}...`);
+            core.info('Polling for Railway deployment commit statuses...');
 
             for (let attempt = 1; attempt <= maxAttempts; attempt++) {
               const { data: statuses } = await github.rest.repos.listCommitStatusesForRef({
@@ -142,9 +146,9 @@ jobs:
                   return;
                 }
 
-                core.info(`Attempt ${attempt}/${maxAttempts}: Railway deploying... (${railwayStatuses.map(s => `${s.context}=${s.state}`).join(', ')})`);
+                core.info(`[${attempt}/${maxAttempts}] Railway deploying... (${railwayStatuses.map(s => `${s.context}=${s.state}`).join(', ')})`);
               } else {
-                core.info(`Attempt ${attempt}/${maxAttempts}: Waiting for Railway to start...`);
+                core.info(`[${attempt}/${maxAttempts}] No Railway statuses yet...`);
               }
 
               if (attempt < maxAttempts) {
@@ -152,7 +156,7 @@ jobs:
               }
             }
 
-            core.warning('Railway deployment status not detected within timeout — Railway may not be configured for this repo');
+            core.warning('Railway deployment status not detected within 5 minutes. This is expected on the first PR before services exist on main.');
 
   # Migration validation is handled by Supabase's GitHub integration
   # (shows as "Supabase Preview" check on PRs)
