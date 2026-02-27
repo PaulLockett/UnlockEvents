@@ -10,6 +10,7 @@ async function run() {
 
   const tlsCert = process.env["TEMPORAL_TLS_CERT"];
   const tlsKey = process.env["TEMPORAL_TLS_KEY"];
+  const apiKey = process.env["TEMPORAL_API_KEY"];
 
   const connection = await NativeConnection.connect({
     address,
@@ -21,7 +22,11 @@ async function run() {
               key: Buffer.from(tlsKey, "base64"),
             },
           }
-        : undefined,
+        : apiKey
+          ? true
+          : undefined,
+    metadata: apiKey ? { "temporal-namespace": namespace } : undefined,
+    apiKey: apiKey || undefined,
   });
 
   const worker = await Worker.create({

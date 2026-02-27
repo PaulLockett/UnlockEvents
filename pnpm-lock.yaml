@@ -52,6 +52,22 @@ importers:
         specifier: ^3.0.0
         version: 3.2.4(@types/node@20.19.30)(terser@5.46.0)(tsx@4.21.0)(yaml@2.8.2)
 
+  packages/capture-access:
+    dependencies:
+      '@unlock-events/db':
+        specifier: workspace:*
+        version: link:../db
+    devDependencies:
+      '@types/node':
+        specifier: ^20.17.0
+        version: 20.19.30
+      typescript:
+        specifier: ^5.7.3
+        version: 5.9.3
+      vitest:
+        specifier: ^3.0.0
+        version: 3.2.4(@types/node@20.19.30)(terser@5.46.0)(tsx@4.21.0)(yaml@2.8.2)
+
   packages/db:
     dependencies:
       drizzle-orm:
@@ -73,6 +89,70 @@ importers:
       typescript:
         specifier: ^5.7.3
         version: 5.9.3
+
+  packages/dedup-engine:
+    devDependencies:
+      '@types/node':
+        specifier: ^20.17.0
+        version: 20.19.30
+      typescript:
+        specifier: ^5.7.3
+        version: 5.9.3
+      vitest:
+        specifier: ^3.0.0
+        version: 3.2.4(@types/node@20.19.30)(terser@5.46.0)(tsx@4.21.0)(yaml@2.8.2)
+
+  packages/discovery-engine:
+    devDependencies:
+      '@types/node':
+        specifier: ^20.17.0
+        version: 20.19.30
+      typescript:
+        specifier: ^5.7.3
+        version: 5.9.3
+      vitest:
+        specifier: ^3.0.0
+        version: 3.2.4(@types/node@20.19.30)(terser@5.46.0)(tsx@4.21.0)(yaml@2.8.2)
+
+  packages/environment-navigator:
+    devDependencies:
+      '@types/node':
+        specifier: ^20.17.0
+        version: 20.19.30
+      typescript:
+        specifier: ^5.7.3
+        version: 5.9.3
+      vitest:
+        specifier: ^3.0.0
+        version: 3.2.4(@types/node@20.19.30)(terser@5.46.0)(tsx@4.21.0)(yaml@2.8.2)
+
+  packages/event-access:
+    dependencies:
+      '@unlock-events/db':
+        specifier: workspace:*
+        version: link:../db
+    devDependencies:
+      '@types/node':
+        specifier: ^20.17.0
+        version: 20.19.30
+      typescript:
+        specifier: ^5.7.3
+        version: 5.9.3
+      vitest:
+        specifier: ^3.0.0
+        version: 3.2.4(@types/node@20.19.30)(terser@5.46.0)(tsx@4.21.0)(yaml@2.8.2)
+
+  packages/event-manager:
+    devDependencies:
+      '@types/node':
+        specifier: ^20.17.0
+        version: 20.19.30
+      typescript:
+        specifier: ^5.7.3
+        version: 5.9.3
+      vitest:
+        specifier: ^3.0.0
+        version: 3.2.4(@types/node@20.19.30)(terser@5.46.0)(tsx@4.21.0)(yaml@2.8.2)
 
   packages/experiment-access:
     dependencies:
@@ -99,11 +179,63 @@ importers:
         specifier: ^3.0.0
         version: 3.2.4(@types/node@20.19.30)(terser@5.46.0)(tsx@4.21.0)(yaml@2.8.2)
 
+  packages/extraction-engine:
+    devDependencies:
+      '@types/node':
+        specifier: ^20.17.0
+        version: 20.19.30
+      typescript:
+        specifier: ^5.7.3
+        version: 5.9.3
+      vitest:
+        specifier: ^3.0.0
+        version: 3.2.4(@types/node@20.19.30)(terser@5.46.0)(tsx@4.21.0)(yaml@2.8.2)
+
+  packages/ingestion-manager:
+    devDependencies:
+      '@types/node':
+        specifier: ^20.17.0
+        version: 20.19.30
+      typescript:
+        specifier: ^5.7.3
+        version: 5.9.3
+      vitest:
+        specifier: ^3.0.0
+        version: 3.2.4(@types/node@20.19.30)(terser@5.46.0)(tsx@4.21.0)(yaml@2.8.2)
+
   packages/memory:
     dependencies:
       '@honcho-ai/sdk':
         specifier: ^2.0.0
         version: 2.0.0
+    devDependencies:
+      '@types/node':
+        specifier: ^20.17.0
+        version: 20.19.30
+      typescript:
+        specifier: ^5.7.3
+        version: 5.9.3
+      vitest:
+        specifier: ^3.0.0
+        version: 3.2.4(@types/node@20.19.30)(terser@5.46.0)(tsx@4.21.0)(yaml@2.8.2)
+
+  packages/scheduler:
+    devDependencies:
+      '@types/node':
+        specifier: ^20.17.0
+        version: 20.19.30
+      typescript:
+        specifier: ^5.7.3
+        version: 5.9.3
+      vitest:
+        specifier: ^3.0.0
+        version: 3.2.4(@types/node@20.19.30)(terser@5.46.0)(tsx@4.21.0)(yaml@2.8.2)
+
+  packages/source-access:
+    dependencies:
+      '@unlock-events/db':
+        specifier: workspace:*
+        version: link:../db
     devDependencies:
       '@types/node':
         specifier: ^20.17.0
@@ -217,6 +349,39 @@ importers:
       '@temporalio/workflow':
         specifier: ^1.11.0
         version: 1.15.0
+      '@unlock-events/capture-access':
+        specifier: workspace:*
+        version: link:../../packages/capture-access
+      '@unlock-events/dedup-engine':
+        specifier: workspace:*
+        version: link:../../packages/dedup-engine
+      '@unlock-events/discovery-engine':
+        specifier: workspace:*
+        version: link:../../packages/discovery-engine
+      '@unlock-events/environment-navigator':
+        specifier: workspace:*
+        version: link:../../packages/environment-navigator
+      '@unlock-events/event-access':
+        specifier: workspace:*
+        version: link:../../packages/event-access
+      '@unlock-events/event-manager':
+        specifier: workspace:*
+        version: link:../../packages/event-manager
+      '@unlock-events/experiment-access':
+        specifier: workspace:*
+        version: link:../../packages/experiment-access
+      '@unlock-events/extraction-engine':
+        specifier: workspace:*
+        version: link:../../packages/extraction-engine
+      '@unlock-events/ingestion-manager':
+        specifier: workspace:*
+        version: link:../../packages/ingestion-manager
+      '@unlock-events/scheduler':
+        specifier: workspace:*
+        version: link:../../packages/scheduler
+      '@unlock-events/source-access':
+        specifier: workspace:*
+        version: link:../../packages/source-access
     devDependencies:
       tsup:
         specifier: ^8.3.0

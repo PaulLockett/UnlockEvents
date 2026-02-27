@@ -274,10 +274,10 @@ When AI "isn't working," diagnose via Three Gulfs:
 
 A production system that displays all professional/business events in Alabama by:
 
-1. Using an LLM-powered Discovery Engine (E1) to figure out HOW to crawl each site
+1. Using an LLM-powered Discovery Engine (E1) to figure out HOW to navigate each environment
 2. Converging from exploration → refinement → optimization → production
-3. Browser automation via Browserbase for complex sites (R4: Page Fetcher)
-4. AI-powered extraction of structured event data (E2)
+3. Browser automation via Browserbase for complex environments (R4: Environment Navigator)
+4. AI-powered extraction of structured event data from observation bundles (E2)
 5. Deduplicating events across sources (E3)
 6. Exposing events via API and Dashboard
 
@@ -310,7 +310,7 @@ CLIENTS (WHO uses it)
 └── C3: Source Admin UI - Operator interface for managing sources
 
 MANAGERS (WHAT workflows/sequences)
-├── M1: Ingestion Manager - Workflow Manager for crawl orchestration
+├── M1: Ingestion Manager - Workflow Manager for discovery cycle orchestration
 └── M2: Event Manager - Event lifecycle operations
 
 ENGINES (HOW business logic works)
@@ -321,13 +321,13 @@ ENGINES (HOW business logic works)
 RESOURCE ACCESS (WHERE data lives)
 ├── R1: Source Access - Source entity operations
 ├── R2: Event Access - Event entity operations
-├── R3: Raw Content Access - Stores fetched HTML
-├── R4: Page Fetcher - Browser automation via Browserbase
+├── R3: Capture Access - Observation bundle lifecycle (screenshots, HTML, network logs, video)
+├── R4: Environment Navigator - Browser session lifecycle via Browserbase
 └── R5: Experiment Store - Shared M1/E1 state (business verbs, NOT CRUD)
 
 UTILITIES (cross-cutting)
 ├── U2: AI Gateway - LLM abstraction (Claude API)
-├── U3: Scheduler - Per-source crawl cadence
+├── U3: Scheduler - Per-source navigation cadence
 ├── U4: Memory - Cross-session learning (Honcho SDK)
 └── U5: Web Search - Source discovery
 
@@ -370,14 +370,14 @@ ResourceAccess must expose atomic business verbs, not CRUD operations:
 | **CompleteExperiment**     | M1     | Finalize and extract converged program      |
 | **ConsumeBudget**          | M1     | Deduct from experiment budget               |
 
-### R4 Business Verbs (Page Fetcher)
+### R4 Business Verbs (Environment Navigator)
 
-| Verb                  | Purpose                                                   |
-| --------------------- | --------------------------------------------------------- |
-| **OpenCrawlContext**  | Start browser session via Browserbase                     |
-| **NavigateTo**        | Go to URL, return PageSnapshot                            |
-| **Interact**          | Perform action (click, fill, scroll), return PageSnapshot |
-| **CloseCrawlContext** | End browser session                                       |
+| Verb                 | Purpose                                                         |
+| -------------------- | --------------------------------------------------------------- |
+| **enterEnvironment** | Open a browser session to navigate a web environment            |
+| **traverseTo**       | Navigate to a location in the environment and observe           |
+| **performAction**    | Execute an interaction (click, fill, scroll) and observe result |
+| **exitEnvironment**  | End the navigation session                                      |
 
 ### Component Type Context
 
