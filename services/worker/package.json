@@ -1,0 +1,37 @@
+{
+  "name": "@unlock-events/worker",
+  "version": "0.0.1",
+  "private": true,
+  "type": "module",
+  "description": "Temporal worker - runtime for M1: Ingestion Manager workflows",
+  "scripts": {
+    "dev": "tsx watch src/index.ts",
+    "build": "tsup src/index.ts --format esm",
+    "start": "node dist/index.js",
+    "lint": "eslint src/",
+    "typecheck": "tsc --noEmit",
+    "clean": "rm -rf dist"
+  },
+  "dependencies": {
+    "@temporalio/client": "^1.11.0",
+    "@temporalio/worker": "^1.11.0",
+    "@temporalio/workflow": "^1.11.0",
+    "@temporalio/activity": "^1.11.0",
+    "@unlock-events/source-access": "workspace:*",
+    "@unlock-events/event-access": "workspace:*",
+    "@unlock-events/capture-access": "workspace:*",
+    "@unlock-events/environment-navigator": "workspace:*",
+    "@unlock-events/experiment-access": "workspace:*",
+    "@unlock-events/scheduler": "workspace:*",
+    "@unlock-events/discovery-engine": "workspace:*",
+    "@unlock-events/extraction-engine": "workspace:*",
+    "@unlock-events/dedup-engine": "workspace:*",
+    "@unlock-events/ingestion-manager": "workspace:*",
+    "@unlock-events/event-manager": "workspace:*"
+  },
+  "devDependencies": {
+    "tsx": "^4.19.0",
+    "tsup": "^8.3.0",
+    "typescript": "^5.7.3"
+  }
+}

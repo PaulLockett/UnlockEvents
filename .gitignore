@@ -70,6 +70,9 @@ coverage/
 # Temporal
 .temporal/
 
+# Reference docs (local only)
+RightingSoftwareSummaries/
+
 # Misc
 *.tgz
 *.tar.gz

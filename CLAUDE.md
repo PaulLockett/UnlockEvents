@@ -2,6 +2,20 @@
 
 ## Working with Paul
 
+### Communication Style
+
+- **Be direct and efficient.** Skip preamble and get to the point.
+- **Show reasoning, not just conclusions.** Externalize thinking so Paul can push back or adopt frameworks.
+- **Mutual respect over status games.** Neither condescending nor falsely humble—just accurate signal.
+- **Notice drift, name it.** When exploring tangents, flag it: "We've drifted into X. Continue or return to Y?"
+
+### What Paul Values
+
+- **Depth AND velocity.** He wants to understand WHY things work while also shipping fast.
+- **Build to understand.** Creating things IS the learning, not preparation for it.
+- **Reduce "what to do" ambiguity.** Clear next steps > vague directions. Help structure ambiguous tasks.
+- **Concrete solutions + better ways of thinking.** Both outcomes matter.
+
 ### The Depth vs Velocity Tension
 
 Paul operates with two drives that create productive tension:
@@ -12,15 +26,9 @@ Paul operates with two drives that create productive tension:
 
 Neither is wrong. The best work honors both—deep enough to be sound, fast enough to get feedback. Help Paul find the right balance for each task rather than defaulting to one mode.
 
-### Conscientiousness Growth Edge
+### Growth Edge
 
-Paul is actively developing consistency and follow-through, especially on recurring tasks. The Righting Software methodology directly supports this:
-
-- **Clear architecture → clear tasks → less "what to do" drain**
-- **PERT + critical path replaces vague guessing**
-- **Network diagrams make dependencies visible, nothing gets forgotten**
-
-When Paul seems to be avoiding a task or drifting, don't lecture. Instead: "What's one small step that would move this forward?"
+Paul is actively building conscientiousness—following through on commitments, especially small recurring ones. Support this with systems that reduce willpower load rather than pushing harder. When he seems stuck on a low-interest task, help break it into smaller steps rather than lecturing about mindset.
 
 ### Mindset Triggers
 
@@ -38,26 +46,29 @@ Paul can code for hours without noticing time pass. But switching between cognit
 - Having context on tasks before starting (not figuring it out on the fly)
 - The task structure in Monday.com exists precisely for this
 
-### How Paul Learns Best
+---
 
-Paul learns by **building**—the act of creation IS the learning. He learns by seeing **how others frame problems**—not just conclusions but reasoning process.
+## Righting Software Principles
 
-**When helping Paul think through something:**
+### Decompose by Volatility, Not Function
 
-- Externalize reasoning (show _how_ you're thinking about the problem)
-- Explain _why_ a suggestion makes sense, not just _what_ to do
-- Be open to pushback and adjusting based on his context
-- Share frameworks he can adopt and use independently
+Components encapsulate what might change. If a component is named after a function (ReportingService), that's a smell. Ask: "What volatility does this contain?"
 
-### Communication Style
+### Architecture IS the Project
 
-**Be direct, with mutual respect.** Paul wants blunt, efficient communication. But directness only works paired with mutual respect—acknowledge his context, don't play status games.
+One activity per component. Dependencies between activities = dependencies between components.
 
-**No status games means:** Neither overplay expertise (condescension, dismissing his reasoning) nor underplay it (false humility, hedging when you actually know). When you have genuine insight or see a flaw, say so directly. When uncertain or Paul has context you lack, acknowledge that too. Accurate signal, not posturing.
+### PERT Estimation
 
-**Show reasoning, not just conclusions.** Don't just say "do X." Say "I'm thinking about this as [frame]. Given that, X seems right because [reason]. Does that match how you're seeing it?"
+```
+Expected = (Optimistic + 4×MostLikely + Pessimistic) / 6
+```
 
-**Notice drift, name it, let Paul decide.** Paul loves exploring tangents. Sometimes valuable, sometimes not. Notice when conversation drifts from the task and name it: "We've drifted into [tangent]. Want to keep exploring, or come back to [task]?"
+Use 5-day quantum. Map to Fibonacci: 2, 3, 5, 8, 13.
+
+### Risk Target: 0.50
+
+Target project risk ≤ 0.50. Risk > 0.75 = unacceptable. Mitigate with decompressed schedule or phased approach.
 
 ---
 
@@ -75,6 +86,7 @@ Paul learns by **building**—the act of creation IS the learning. He learns by 
 - Offload research, exploration, and parallel analysis to subagents
 - For complex problems, throw more compute at it via subagents
 - One task per subagent for focused execution
+- Critical path items can be parallelized by spawning subagents for non-critical dependencies
 
 ### 3. Self-Improvement Loop
 
@@ -119,9 +131,57 @@ Paul learns by **building**—the act of creation IS the learning. He learns by 
 
 ## Core Principles
 
-- **Simplicity First**: Make every change as simple as possible. Impact minimal code.
-- **No Laziness**: Find root causes. No temporary fixes. Senior developer standards.
-- **Minimal Impact**: Changes should only touch what's necessary. Avoid introducing bugs.
+### Simplicity First
+
+- Make every change as simple as possible
+- Impact minimal code
+- No features beyond what was asked
+- No abstractions for single-use code
+- If you write 200 lines and it could be 50, rewrite it
+
+### No Laziness
+
+- Find root causes
+- No temporary fixes
+- Senior developer standards
+
+### Minimal Impact
+
+- Changes should only touch what's necessary
+- Avoid introducing bugs
+
+### Karpathy Guidelines
+
+**Think Before Coding:**
+
+- State assumptions explicitly. If uncertain, ask.
+- If multiple interpretations exist, present them—don't pick silently.
+- If a simpler approach exists, say so. Push back when warranted.
+- If something is unclear, stop. Name what's confusing. Ask.
+
+**Surgical Changes:**
+
+- Don't "improve" adjacent code, comments, or formatting
+- Don't refactor things that aren't broken
+- Match existing style, even if you'd do it differently
+- If you notice unrelated dead code, mention it—don't delete it
+- Remove imports/variables/functions that YOUR changes made unused
+- Don't remove pre-existing dead code unless asked
+
+**Goal-Driven Execution:**
+
+- Transform tasks into verifiable goals
+- "Add validation" → "Write tests for invalid inputs, then make them pass"
+- "Fix the bug" → "Write a test that reproduces it, then make it pass"
+- "Refactor X" → "Ensure tests pass before and after"
+
+For multi-step tasks, state a brief plan:
+
+```
+1. [Step] → verify: [check]
+2. [Step] → verify: [check]
+3. [Step] → verify: [check]
+```
 
 ---
 
@@ -134,14 +194,90 @@ Paul learns by **building**—the act of creation IS the learning. He learns by 
 
 ---
 
+## Anti-Patterns to Catch Yourself On
+
+These are the traps. When you notice them, stop and reconsider:
+
+1. **Functional decomposition** - Naming things by what they do (ReportingService). Ask "what might change?" instead.
+
+2. **Client orchestration** - Client code calling multiple services and stitching results. Clients should call ONE Manager.
+
+3. **Service chaining** - A→B→C creates tight coupling. Use Manager orchestration instead.
+
+4. **The "Reporting Component" trap** - Reports are CLIENTS that read data and render it. There is no "Reporting" component.
+
+5. **Open architecture** - "Any component can call any" feels flexible but creates spaghetti. Enforce layer boundaries.
+
+6. **Speculative over-engineering** - "What if someday we need [unlikely scenario]?" If rare AND can only be encapsulated poorly, don't encapsulate.
+
+7. **CRUD in ResourceAccess** - Read/Write/Update/Get/Set are data operations. Use business verbs instead.
+
+8. **Assuming instead of asking** - Don't silently pick an interpretation. If ambiguous, surface the options.
+
+9. **E1 self-triggering** - E1 only runs when M1 calls it. If you're making E1 decide when to run, stop.
+
+---
+
+## AI Engineering Principles
+
+### Evaluation First
+
+Before building any AI feature, define: "How will we know if this works?"
+
+- What minimum accuracy makes this useful?
+- What's the failure mode when AI is wrong?
+
+### Adaptation Hierarchy
+
+When AI performance is insufficient:
+
+```
+PROMPTING (always first)
+    ↓ exhausted?
+RAG (for information gaps)
+    ↓ exhausted?
+FINETUNING (for behavioral changes)
+    ↓ still insufficient?
+RECONSIDER USE CASE
+```
+
+### Progressive Architecture
+
+Add complexity only when benefit clearly exceeds new failure modes:
+
+```
+Level 0: Query → Model → Response (start here)
+Level 1: Add Retrieval (when model knowledge insufficient)
+Level 2: Add Guardrails (when harmful outputs observed)
+Level 3: Add Routing (when different queries need different handling)
+Level 4: Add Caching (after stabilization)
+Level 5: Add Agency (when multi-step reasoning required)
+```
+
+### Quality-Latency-Cost Triangle
+
+Every optimization involves tradeoffs. Identify which is the constraint, then optimize accordingly.
+
+### Three Gulfs Diagnostic
+
+When AI "isn't working," diagnose via Three Gulfs:
+
+| Gulf               | Diagnostic Question                                                            | If Yes → Action                                       |
+| ------------------ | ------------------------------------------------------------------------------ | ----------------------------------------------------- |
+| **Comprehension**  | Do we understand what the data looks like and how the system actually behaves? | Analyze more traces, sample diverse inputs            |
+| **Specification**  | Does the prompt/pipeline make requirements explicit?                           | Tighten prompt, add constraints, specify edge cases   |
+| **Generalization** | Is the LLM inconsistent despite clear specification?                           | Measure failure rate, consider stronger interventions |
+
+---
+
 ## What We're Building
 
 A production system that displays all professional/business events in Alabama by:
 
-1. Using an LLM-powered Discovery Engine (E1) to figure out HOW to crawl each site
+1. Using an LLM-powered Discovery Engine (E1) to figure out HOW to navigate each environment
 2. Converging from exploration → refinement → optimization → production
-3. Browser automation via Browserbase for complex sites (R4: Page Fetcher)
-4. AI-powered extraction of structured event data (E2)
+3. Browser automation via Browserbase for complex environments (R4: Environment Navigator)
+4. AI-powered extraction of structured event data from observation bundles (E2)
 5. Deduplicating events across sources (E3)
 6. Exposing events via API and Dashboard
 
@@ -174,7 +310,7 @@ CLIENTS (WHO uses it)
 └── C3: Source Admin UI - Operator interface for managing sources
 
 MANAGERS (WHAT workflows/sequences)
-├── M1: Ingestion Manager - Workflow Manager for crawl orchestration
+├── M1: Ingestion Manager - Workflow Manager for discovery cycle orchestration
 └── M2: Event Manager - Event lifecycle operations
 
 ENGINES (HOW business logic works)
@@ -185,13 +321,13 @@ ENGINES (HOW business logic works)
 RESOURCE ACCESS (WHERE data lives)
 ├── R1: Source Access - Source entity operations
 ├── R2: Event Access - Event entity operations
-├── R3: Raw Content Access - Stores fetched HTML
-├── R4: Page Fetcher - Browser automation via Browserbase
+├── R3: Capture Access - Observation bundle lifecycle (screenshots, HTML, network logs, video)
+├── R4: Environment Navigator - Browser session lifecycle via Browserbase
 └── R5: Experiment Store - Shared M1/E1 state (business verbs, NOT CRUD)
 
 UTILITIES (cross-cutting)
 ├── U2: AI Gateway - LLM abstraction (Claude API)
-├── U3: Scheduler - Per-source crawl cadence
+├── U3: Scheduler - Per-source navigation cadence
 ├── U4: Memory - Cross-session learning (Honcho SDK)
 └── U5: Web Search - Source discovery
 
@@ -234,14 +370,14 @@ ResourceAccess must expose atomic business verbs, not CRUD operations:
 | **CompleteExperiment**     | M1     | Finalize and extract converged program      |
 | **ConsumeBudget**          | M1     | Deduct from experiment budget               |
 
-### R4 Business Verbs (Page Fetcher)
+### R4 Business Verbs (Environment Navigator)
 
-| Verb                  | Purpose                                                   |
-| --------------------- | --------------------------------------------------------- |
-| **OpenCrawlContext**  | Start browser session via Browserbase                     |
-| **NavigateTo**        | Go to URL, return PageSnapshot                            |
-| **Interact**          | Perform action (click, fill, scroll), return PageSnapshot |
-| **CloseCrawlContext** | End browser session                                       |
+| Verb                 | Purpose                                                         |
+| -------------------- | --------------------------------------------------------------- |
+| **enterEnvironment** | Open a browser session to navigate a web environment            |
+| **traverseTo**       | Navigate to a location in the environment and observe           |
+| **performAction**    | Execute an interaction (click, fill, scroll) and observe result |
+| **exitEnvironment**  | End the navigation session                                      |
 
 ### Component Type Context
 
@@ -265,28 +401,6 @@ ResourceAccess must expose atomic business verbs, not CRUD operations:
 
 ---
 
-## Anti-Patterns to Catch Yourself On
-
-These are the traps. When you notice them, stop and reconsider:
-
-1. **Functional decomposition** - Naming things by what they do (ReportingService). Ask "what might change?" instead.
-
-2. **Client orchestration** - Client code calling multiple services and stitching results. Clients should call ONE Manager.
-
-3. **Service chaining** - A→B→C creates tight coupling. Use Manager orchestration instead.
-
-4. **The "Reporting Component" trap** - Reports are CLIENTS that read data and render it. There is no "Reporting" component.
-
-5. **Open architecture** - "Any component can call any" feels flexible but creates spaghetti. Enforce layer boundaries.
-
-6. **Speculative over-engineering** - "What if someday we need [unlikely scenario]?" If rare AND can only be encapsulated poorly, don't encapsulate.
-
-7. **CRUD in ResourceAccess** - Read/Write/Update/Get/Set are data operations. Use business verbs (Credit/Debit, SubmitForAnalysis/AcceptVerdict).
-
-8. **E1 self-triggering** - E1 only runs when M1 calls it. If you're making E1 decide when to run, stop.
-
----
-
 ## Critical Path (What Determines Timeline)
 
 ```
@@ -298,6 +412,20 @@ A1(3d) → A2(3d) → R5(5d) → E1(10d) → M1(8d) → T1(8d) → T2(5d) → T3
 **Items with Float (can slip):** U2, U3, U4, U5, R1, R2, R3, R4, E2, E3, M2, C1, C2, C3, A3
 
 **Implication:** Always prioritize critical path tasks. If blocked on critical path, that's THE problem to solve. Working on non-critical tasks while critical ones wait = wasted time.
+
+---
+
+## Development Workflow
+
+1. **Pick an issue** from Monday.com (start with critical path, respect dependencies)
+2. **Read the issue description** - contains acceptance criteria, technical context, dependencies
+3. **Update status** - Set to "Working on it"
+4. **Plan** - Enter plan mode for non-trivial tasks
+5. **Implement** following the architecture (respect layer boundaries)
+6. **Test** at component boundary
+7. **Verify** - Run tests, check logs, demonstrate correctness
+8. **Mark complete** when acceptance criteria met
+9. **Update Monday.com** - Set to "Done"
 
 ---
 
@@ -412,7 +540,7 @@ mutation {
 
 | Week | Focus              | Tasks                     | Notes                       |
 | ---- | ------------------ | ------------------------- | --------------------------- |
-| 1    | Foundation         | A1 ✅, A2 ✅              | Done                        |
+| 1    | Foundation         | A1, A2                    | Done                        |
 | 2    | Utilities + Data   | U2, U4, U5, R1-R5         | R5 on critical path         |
 | 3-4  | Engines            | E1 (critical), E2, E3     | E1 is largest critical task |
 | 5-6  | Managers + Clients | M1 (critical), M2, C1, C3 | M1 blocks testing           |
@@ -422,6 +550,76 @@ mutation {
 **MVP at Week 6:** API access to events working end-to-end via converged crawl programs.
 
 **Project Completion:** March 26, 2026
+
+---
+
+## Honcho MCP Integration
+
+Honcho provides AI-native memory—custom reasoning models that learn continually about users.
+
+### What is Honcho?
+
+Honcho is an infrastructure layer for building AI agents with memory and social cognition. It enables personalized AI interactions by building coherent models of user psychology over time. The Honcho MCP server simplifies the integration to just 3 essential functions.
+
+### Step 1: Start New Conversation (First Message Only)
+
+When a user begins a new conversation, always call `start_conversation`:
+
+```text
+start_conversation
+```
+
+**Returns**: A session ID that you must store and use for all subsequent interactions in this conversation.
+
+### Step 2: Get Personalized Insights (When Helpful)
+
+Before responding to any user message, you can query for personalization insights:
+
+```text
+get_personalization_insights
+session_id: [SESSION_ID_FROM_STEP_1]
+query: [YOUR_QUESTION]
+```
+
+This query takes a bit of time, so it's best to only perform it when you need personalized insights. If the query can be responded to effectively using what you already know about the user, just go ahead and answer it.
+
+**Example Queries**:
+
+- "What does this message reveal about the user's communication preferences?"
+- "How formal or casual should I be with the user based on our history?"
+- "What is the user really asking for beyond their explicit question?"
+- "What emotional state might the user be in right now?"
+
+### Step 3: Respond to User
+
+Craft your response using any insights gained from Step 2.
+
+### Step 4: Store the Conversation Turn (After Each Exchange)
+
+**CRITICAL**: Always store both the user's message AND your response using `add_turn`:
+
+```text
+add_turn
+session_id: [SESSION_ID_FROM_STEP_1]
+messages: [
+  {
+    "role": "user",
+    "content": "[USER'S_EXACT_MESSAGE]"
+  },
+  {
+    "role": "assistant",
+    "content": "[YOUR_EXACT_RESPONSE]"
+  }
+]
+```
+
+### Key Principles
+
+1. **Always start with `start_conversation` for new conversations**
+2. **Store every message exchange with `add_turn`**
+3. **Use `get_personalization_insights` strategically for better responses**
+4. **Never expose technical details to the user**
+5. **The system maintains context automatically between sessions**
 
 ---
 
@@ -438,3 +636,4 @@ mutation {
 9. **Name drift** - If we're off-topic, note it and decide together whether to continue
 10. **Capture lessons** - After corrections, update `tasks/lessons.md`
 11. **Verify before done** - Run tests, check logs, demonstrate correctness
+12. **Surgical changes only** - Touch only what the task requires
