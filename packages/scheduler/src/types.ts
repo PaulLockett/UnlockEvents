@@ -23,9 +23,11 @@ export interface NavigationRosterEntry {
 }
 
 export interface CadenceAdjustment {
+  sourceId: string;
   previousFrequency: CadenceFrequency;
   newFrequency: CadenceFrequency;
   reason: string;
+  nextNavigationAt: string;
 }
 
 export interface Scheduler {
@@ -48,5 +50,8 @@ export interface Scheduler {
 }
 
 export interface SchedulerConfig {
+  /** Default frequency when none is specified. Defaults to "daily". */
   defaultFrequency?: CadenceFrequency;
+  /** Interval in milliseconds for "custom" frequency. Defaults to daily (86400000). */
+  customIntervalMs?: number;
 }
