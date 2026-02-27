@@ -20,7 +20,10 @@
     "test:watch": "vitest"
   },
   "dependencies": {
-    "@unlock-events/db": "workspace:*"
+    "@unlock-events/db": "workspace:*",
+    "@supabase/supabase-js": "^2.49.0",
+    "drizzle-orm": "^0.38.0",
+    "postgres": "^3.4.0"
   },
   "devDependencies": {
     "@types/node": "^20.17.0",
