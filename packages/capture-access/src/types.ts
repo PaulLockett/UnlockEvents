@@ -13,6 +13,7 @@ export interface ObservationBundle {
   id: string;
   sourceId: string;
   sessionId: string;
+  url: string;
   html: string | null;
   screenshotUrl: string | null;
   networkLogUrl: string | null;
@@ -24,9 +25,9 @@ export interface ObservationBundle {
 export interface CaptureRecord {
   id: string;
   sourceId: string;
-  sessionId: string;
+  url: string;
   status: CaptureStatus;
-  bundlePath: string;
+  contentHash: string | null;
   capturedAt: string;
   extractedAt: string | null;
 }
@@ -53,5 +54,7 @@ export interface CaptureAccess {
 
 export interface CaptureAccessConfig {
   connectionString?: string;
+  supabaseUrl?: string;
+  supabaseKey?: string;
   storageBucket?: string;
 }
