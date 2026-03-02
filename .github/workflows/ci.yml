@@ -124,7 +124,7 @@ jobs:
               });
 
               const railwayStatuses = statuses.filter(s =>
-                s.context.toLowerCase().includes('railway')
+                s.context.startsWith('unlock-events -')
               );
 
               if (railwayStatuses.length > 0) {
