@@ -1,5 +1,3 @@
-import { NativeConnection, Worker } from "@temporalio/worker";
-
 const TASK_QUEUE = "unlock-events-ingestion";
 
 async function run() {
@@ -14,6 +12,9 @@ async function run() {
     }, 60_000);
     return;
   }
+
+  // Dynamic import — only load Temporal native SDK when actually connecting
+  const { NativeConnection, Worker } = await import("@temporalio/worker");
 
   console.log(`Connecting to Temporal at ${address} (namespace: ${namespace})`);
 
