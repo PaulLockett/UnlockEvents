@@ -6,8 +6,8 @@
     "watchPatterns": ["/services/worker/**", "/packages/**"]
   },
   "deploy": {
-    "startCommand": "pnpm --filter @unlock-events/worker start",
-    "restartPolicyType": "ALWAYS",
-    "restartPolicyMaxRetries": -1
+    "startCommand": "node services/worker/dist/index.js",
+    "restartPolicyType": "ON_FAILURE",
+    "restartPolicyMaxRetries": 3
   }
 }
