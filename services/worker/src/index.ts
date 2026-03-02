@@ -3,8 +3,17 @@ import { NativeConnection, Worker } from "@temporalio/worker";
 const TASK_QUEUE = "unlock-events-ingestion";
 
 async function run() {
-  const address = process.env["TEMPORAL_ADDRESS"] || "localhost:7233";
+  const address = process.env["TEMPORAL_ADDRESS"];
   const namespace = process.env["TEMPORAL_NAMESPACE"] || "default";
+
+  if (!address) {
+    console.log("TEMPORAL_ADDRESS not set — worker running in stub mode (no Temporal connection)");
+    // Keep process alive so Railway doesn't restart-loop in PR previews
+    setInterval(() => {
+      console.log("Worker stub: waiting for Temporal configuration...");
+    }, 60_000);
+    return;
+  }
 
   console.log(`Connecting to Temporal at ${address} (namespace: ${namespace})`);
 

@@ -225,6 +225,167 @@ describe("Scheduler", () => {
     });
   });
 
+  describe("mixed-frequency roster ordering", () => {
+    it("prioritizes hourly source over daily when both 2h overdue", async () => {
+      // Hourly source: due at 10:00, checked at 12:00 → 2h overdue / 1h interval = 2.0
+      await scheduler.scheduleNextNavigation("hourly-src", "hourly", "2026-01-15T09:00:00.000Z");
+      // Daily source: due at 10:00 (Jan 14 + 24h), checked at 12:00 → 2h overdue / 24h interval ≈ 0.08
+      await scheduler.scheduleNextNavigation("daily-src", "daily", "2026-01-14T10:00:00.000Z");
+
+      const roster = await scheduler.assembleNavigationRoster(
+        ["hourly-src", "daily-src"],
+        "2026-01-15T12:00:00.000Z"
+      );
+
+      expect(roster).toHaveLength(2);
+      expect(roster[0]!.sourceId).toBe("hourly-src");
+      expect(roster[0]!.priority).toBe(2);
+      expect(roster[1]!.sourceId).toBe("daily-src");
+      expect(roster[1]!.priority).toBeLessThan(0.1);
+    });
+
+    it("weekly source far overdue outranks recently-due hourly source", async () => {
+      // Weekly source: last Jan 1 → due Jan 8 00:00. Check at Jan 22 00:00 → 14d / 7d = 2.0
+      await scheduler.scheduleNextNavigation("weekly-src", "weekly", "2026-01-01T00:00:00.000Z");
+      // Hourly source: last Jan 21 23:00 → due Jan 22 00:00. Check at Jan 22 01:00 → 1h / 1h = 1.0
+      await scheduler.scheduleNextNavigation("hourly-src", "hourly", "2026-01-21T23:00:00.000Z");
+
+      const roster = await scheduler.assembleNavigationRoster(
+        ["weekly-src", "hourly-src"],
+        "2026-01-22T01:00:00.000Z"
+      );
+
+      expect(roster).toHaveLength(2);
+      expect(roster[0]!.sourceId).toBe("weekly-src");
+      // 13d + 1h overdue = 13.04... / 7 = 1.86 — still much higher than hourly
+      expect(roster[0]!.priority).toBeGreaterThan(1.5);
+      expect(roster[1]!.sourceId).toBe("hourly-src");
+      expect(roster[1]!.priority).toBe(1);
+    });
+  });
+
+  describe("priority precision", () => {
+    it("rounds priority to two decimal places", async () => {
+      // Daily source: due Jan 16, checked Jan 16 + 8h → 8h overdue / 24h interval = 0.333...
+      await scheduler.scheduleNextNavigation("src-1", "daily", "2026-01-15T00:00:00.000Z");
+
+      const roster = await scheduler.assembleNavigationRoster(
+        ["src-1"],
+        "2026-01-16T08:00:00.000Z"
+      );
+
+      expect(roster[0]!.priority).toBe(0.33);
+    });
+
+    it("handles very small overdue producing near-zero priority", async () => {
+      // Monthly source: due Jan 31, checked Jan 31 + 1h → 1h / 720h = 0.001388...
+      await scheduler.scheduleNextNavigation("src-1", "monthly", "2026-01-01T00:00:00.000Z");
+
+      const roster = await scheduler.assembleNavigationRoster(
+        ["src-1"],
+        "2026-01-31T01:00:00.000Z"
+      );
+
+      expect(roster).toHaveLength(1);
+      expect(roster[0]!.priority).toBe(0);
+    });
+  });
+
+  describe("custom frequency in roster", () => {
+    it("uses custom interval for priority calculation", async () => {
+      // Custom 2-hour interval: due at 12:00, checked at 16:00 → 4h overdue / 2h interval = 2.0
+      const customScheduler = createScheduler({ customIntervalMs: 2 * 60 * 60 * 1000 });
+      await customScheduler.scheduleNextNavigation("src-1", "custom", "2026-01-15T10:00:00.000Z");
+
+      const roster = await customScheduler.assembleNavigationRoster(
+        ["src-1"],
+        "2026-01-15T16:00:00.000Z"
+      );
+
+      expect(roster[0]!.priority).toBe(2);
+    });
+  });
+
+  describe("edge cases", () => {
+    it("returns empty roster for empty sourceIds array", async () => {
+      await scheduler.scheduleNextNavigation("src-1", "daily", "2026-01-14T00:00:00.000Z");
+
+      const roster = await scheduler.assembleNavigationRoster([]);
+      expect(roster).toEqual([]);
+    });
+
+    it("adjustCadence for source with null lastNavigatedAt schedules immediately", async () => {
+      const before = Date.now();
+      await scheduler.scheduleNextNavigation("src-1", "weekly", null);
+
+      const adjustment = await scheduler.adjustCadence("src-1", "daily", "needs faster checks");
+
+      // lastNavigatedAt was null → next should be approximately now
+      const nextTime = new Date(adjustment.nextNavigationAt).getTime();
+      expect(nextTime).toBeGreaterThanOrEqual(before);
+      expect(nextTime).toBeLessThanOrEqual(Date.now() + 100);
+    });
+
+    it("multiple sequential adjustments track state correctly", async () => {
+      await scheduler.scheduleNextNavigation("src-1", "hourly", "2026-01-15T10:00:00.000Z");
+
+      const adj1 = await scheduler.adjustCadence("src-1", "daily", "slowing down");
+      expect(adj1.previousFrequency).toBe("hourly");
+      expect(adj1.newFrequency).toBe("daily");
+
+      const adj2 = await scheduler.adjustCadence("src-1", "weekly", "slowing further");
+      expect(adj2.previousFrequency).toBe("daily");
+      expect(adj2.newFrequency).toBe("weekly");
+      expect(adj2.nextNavigationAt).toBe("2026-01-22T10:00:00.000Z");
+
+      const adj3 = await scheduler.adjustCadence("src-1", "hourly", "back to fast");
+      expect(adj3.previousFrequency).toBe("weekly");
+      expect(adj3.newFrequency).toBe("hourly");
+      expect(adj3.nextNavigationAt).toBe("2026-01-15T11:00:00.000Z");
+    });
+
+    it("re-scheduling after adjustment overwrites adjustment state", async () => {
+      await scheduler.scheduleNextNavigation("src-1", "daily", "2026-01-15T10:00:00.000Z");
+      await scheduler.adjustCadence("src-1", "weekly", "slowing down");
+
+      // Re-schedule with fresh lastNavigatedAt — should overwrite the adjusted state
+      const schedule = await scheduler.scheduleNextNavigation(
+        "src-1",
+        "hourly",
+        "2026-01-20T14:00:00.000Z"
+      );
+
+      expect(schedule.frequency).toBe("hourly");
+      expect(schedule.nextNavigationAt).toBe("2026-01-20T15:00:00.000Z");
+
+      // Roster should use the re-scheduled state, not the adjusted state
+      const roster = await scheduler.assembleNavigationRoster(
+        ["src-1"],
+        "2026-01-21T00:00:00.000Z"
+      );
+      expect(roster).toHaveLength(1);
+      expect(roster[0]!.sourceId).toBe("src-1");
+    });
+
+    it("scheduling many sources and filtering to subset works correctly", async () => {
+      for (let i = 0; i < 10; i++) {
+        const lastNav = `2026-01-${String(5 + i).padStart(2, "0")}T00:00:00.000Z`;
+        await scheduler.scheduleNextNavigation(`src-${i}`, "daily", lastNav);
+      }
+
+      // Only ask for 3 of the 10
+      const roster = await scheduler.assembleNavigationRoster(
+        ["src-0", "src-4", "src-9"],
+        "2026-01-20T00:00:00.000Z"
+      );
+
+      expect(roster).toHaveLength(3);
+      // src-0 (due Jan 6) should be most overdue, src-9 (due Jan 15) least
+      expect(roster[0]!.sourceId).toBe("src-0");
+      expect(roster[2]!.sourceId).toBe("src-9");
+    });
+  });
+
   describe("config", () => {
     it("defaults to daily frequency", async () => {
       const adjustment = await scheduler.adjustCadence("src-1", "hourly", "test");
