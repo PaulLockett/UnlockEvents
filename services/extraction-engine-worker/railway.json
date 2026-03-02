@@ -12,7 +12,7 @@
   },
   "deploy": {
     "startCommand": "pnpm --filter @unlock-events/extraction-engine-worker start",
-    "restartPolicyType": "ALWAYS",
-    "restartPolicyMaxRetries": -1
+    "restartPolicyType": "ON_FAILURE",
+    "restartPolicyMaxRetries": 10
   }
 }

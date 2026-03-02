@@ -12,7 +12,7 @@
   },
   "deploy": {
     "startCommand": "pnpm --filter @unlock-events/event-manager-worker start",
-    "restartPolicyType": "ALWAYS",
-    "restartPolicyMaxRetries": -1
+    "restartPolicyType": "ON_FAILURE",
+    "restartPolicyMaxRetries": 10
   }
 }
