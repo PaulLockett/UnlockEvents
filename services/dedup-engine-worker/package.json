@@ -1,9 +1,9 @@
 {
-  "name": "@unlock-events/api",
+  "name": "@unlock-events/dedup-engine-worker",
   "version": "0.0.1",
   "private": true,
   "type": "module",
-  "description": "C1: Event API - REST endpoints for external consumers",
+  "description": "E3: Dedup Engine child workflow worker",
   "scripts": {
     "dev": "tsx watch src/index.ts",
     "build": "tsup src/index.ts --format esm",
@@ -13,10 +13,12 @@
     "clean": "rm -rf dist"
   },
   "dependencies": {
-    "hono": "^4.7.0",
-    "@hono/node-server": "^1.14.0",
-    "@temporalio/client": "^1.11.0",
-    "@unlock-events/temporal-interfaces": "workspace:*"
+    "@temporalio/worker": "^1.11.0",
+    "@temporalio/workflow": "^1.11.0",
+    "@temporalio/activity": "^1.11.0",
+    "@unlock-events/temporal-worker-utils": "workspace:*",
+    "@unlock-events/temporal-interfaces": "workspace:*",
+    "@unlock-events/dedup-engine": "workspace:*"
   },
   "devDependencies": {
     "tsx": "^4.19.0",

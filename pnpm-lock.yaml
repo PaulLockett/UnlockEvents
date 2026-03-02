@@ -247,6 +247,71 @@ importers:
         specifier: ^3.0.0
         version: 3.2.4(@types/node@20.19.30)(terser@5.46.0)(tsx@4.21.0)(yaml@2.8.2)
 
+  packages/temporal-interfaces:
+    dependencies:
+      '@unlock-events/ai-gateway':
+        specifier: workspace:*
+        version: link:../ai-gateway
+      '@unlock-events/capture-access':
+        specifier: workspace:*
+        version: link:../capture-access
+      '@unlock-events/dedup-engine':
+        specifier: workspace:*
+        version: link:../dedup-engine
+      '@unlock-events/discovery-engine':
+        specifier: workspace:*
+        version: link:../discovery-engine
+      '@unlock-events/environment-navigator':
+        specifier: workspace:*
+        version: link:../environment-navigator
+      '@unlock-events/event-access':
+        specifier: workspace:*
+        version: link:../event-access
+      '@unlock-events/event-manager':
+        specifier: workspace:*
+        version: link:../event-manager
+      '@unlock-events/experiment-access':
+        specifier: workspace:*
+        version: link:../experiment-access
+      '@unlock-events/extraction-engine':
+        specifier: workspace:*
+        version: link:../extraction-engine
+      '@unlock-events/ingestion-manager':
+        specifier: workspace:*
+        version: link:../ingestion-manager
+      '@unlock-events/memory':
+        specifier: workspace:*
+        version: link:../memory
+      '@unlock-events/scheduler':
+        specifier: workspace:*
+        version: link:../scheduler
+      '@unlock-events/source-access':
+        specifier: workspace:*
+        version: link:../source-access
+      '@unlock-events/web-search':
+        specifier: workspace:*
+        version: link:../web-search
+    devDependencies:
+      '@types/node':
+        specifier: ^20.17.0
+        version: 20.19.30
+      typescript:
+        specifier: ^5.7.3
+        version: 5.9.3
+
+  packages/temporal-worker-utils:
+    dependencies:
+      '@temporalio/worker':
+        specifier: ^1.11.0
+        version: 1.15.0(tslib@2.8.1)
+    devDependencies:
+      '@types/node':
+        specifier: ^20.17.0
+        version: 20.19.30
+      typescript:
+        specifier: ^5.7.3
+        version: 5.9.3
+
   packages/web-search:
     dependencies:
       '@modelcontextprotocol/sdk':
@@ -294,14 +359,73 @@ importers:
         specifier: ^5.7.3
         version: 5.9.3
 
+  services/ai-gateway-worker:
+    dependencies:
+      '@temporalio/activity':
+        specifier: ^1.11.0
+        version: 1.15.0
+      '@temporalio/worker':
+        specifier: ^1.11.0
+        version: 1.15.0(esbuild@0.27.2)(tslib@2.8.1)
+      '@unlock-events/ai-gateway':
+        specifier: workspace:*
+        version: link:../../packages/ai-gateway
+      '@unlock-events/temporal-interfaces':
+        specifier: workspace:*
+        version: link:../../packages/temporal-interfaces
+      '@unlock-events/temporal-worker-utils':
+        specifier: workspace:*
+        version: link:../../packages/temporal-worker-utils
+    devDependencies:
+      tsup:
+        specifier: ^8.3.0
+        version: 8.5.1(@swc/core@1.15.13)(postcss@8.5.6)(tsx@4.21.0)(typescript@5.9.3)(yaml@2.8.2)
+      tsx:
+        specifier: ^4.19.0
+        version: 4.21.0
+      typescript:
+        specifier: ^5.7.3
+        version: 5.9.3
+
   services/api:
     dependencies:
       '@hono/node-server':
         specifier: ^1.14.0
         version: 1.19.9(hono@4.11.7)
+      '@temporalio/client':
+        specifier: ^1.11.0
+        version: 1.15.0
+      '@unlock-events/temporal-interfaces':
+        specifier: workspace:*
+        version: link:../../packages/temporal-interfaces
       hono:
         specifier: ^4.7.0
         version: 4.11.7
+    devDependencies:
+      tsup:
+        specifier: ^8.3.0
+        version: 8.5.1(@swc/core@1.15.13)(postcss@8.5.6)(tsx@4.21.0)(typescript@5.9.3)(yaml@2.8.2)
+      tsx:
+        specifier: ^4.19.0
+        version: 4.21.0
+      typescript:
+        specifier: ^5.7.3
+        version: 5.9.3
+
+  services/capture-access-worker:
+    dependencies:
+      '@temporalio/activity':
+        specifier: ^1.11.0
+        version: 1.15.0
+      '@temporalio/worker':
+        specifier: ^1.11.0
+        version: 1.15.0(tslib@2.8.1)
+      '@unlock-events/capture-access':
+        specifier: workspace:*
+        version: link:../../packages/capture-access
+      '@unlock-events/temporal-worker-utils':
+        specifier: workspace:*
+        version: link:../../packages/temporal-worker-utils
     devDependencies:
       tsup:
         specifier: ^8.3.0
@@ -335,12 +459,9 @@ importers:
         specifier: ^5.7.3
         version: 5.9.3
 
-  services/worker:
+  services/dedup-engine-worker:
     dependencies:
       '@temporalio/activity':
-        specifier: ^1.11.0
-        version: 1.15.0
-      '@temporalio/client':
         specifier: ^1.11.0
         version: 1.15.0
       '@temporalio/worker':
@@ -349,39 +470,311 @@ importers:
       '@temporalio/workflow':
         specifier: ^1.11.0
         version: 1.15.0
-      '@unlock-events/capture-access':
-        specifier: workspace:*
-        version: link:../../packages/capture-access
       '@unlock-events/dedup-engine':
         specifier: workspace:*
         version: link:../../packages/dedup-engine
+      '@unlock-events/temporal-interfaces':
+        specifier: workspace:*
+        version: link:../../packages/temporal-interfaces
+      '@unlock-events/temporal-worker-utils':
+        specifier: workspace:*
+        version: link:../../packages/temporal-worker-utils
+    devDependencies:
+      tsup:
+        specifier: ^8.3.0
+        version: 8.5.1(@swc/core@1.15.13)(postcss@8.5.6)(tsx@4.21.0)(typescript@5.9.3)(yaml@2.8.2)
+      tsx:
+        specifier: ^4.19.0
+        version: 4.21.0
+      typescript:
+        specifier: ^5.7.3
+        version: 5.9.3
+
+  services/discovery-engine-worker:
+    dependencies:
+      '@temporalio/activity':
+        specifier: ^1.11.0
+        version: 1.15.0
+      '@temporalio/worker':
+        specifier: ^1.11.0
+        version: 1.15.0(tslib@2.8.1)
+      '@temporalio/workflow':
+        specifier: ^1.11.0
+        version: 1.15.0
       '@unlock-events/discovery-engine':
         specifier: workspace:*
         version: link:../../packages/discovery-engine
+      '@unlock-events/temporal-interfaces':
+        specifier: workspace:*
+        version: link:../../packages/temporal-interfaces
+      '@unlock-events/temporal-worker-utils':
+        specifier: workspace:*
+        version: link:../../packages/temporal-worker-utils
+    devDependencies:
+      tsup:
+        specifier: ^8.3.0
+        version: 8.5.1(@swc/core@1.15.13)(postcss@8.5.6)(tsx@4.21.0)(typescript@5.9.3)(yaml@2.8.2)
+      tsx:
+        specifier: ^4.19.0
+        version: 4.21.0
+      typescript:
+        specifier: ^5.7.3
+        version: 5.9.3
+
+  services/environment-navigator-worker:
+    dependencies:
+      '@temporalio/activity':
+        specifier: ^1.11.0
+        version: 1.15.0
+      '@temporalio/worker':
+        specifier: ^1.11.0
+        version: 1.15.0(tslib@2.8.1)
       '@unlock-events/environment-navigator':
         specifier: workspace:*
         version: link:../../packages/environment-navigator
+      '@unlock-events/temporal-worker-utils':
+        specifier: workspace:*
+        version: link:../../packages/temporal-worker-utils
+    devDependencies:
+      tsup:
+        specifier: ^8.3.0
+        version: 8.5.1(@swc/core@1.15.13)(postcss@8.5.6)(tsx@4.21.0)(typescript@5.9.3)(yaml@2.8.2)
+      tsx:
+        specifier: ^4.19.0
+        version: 4.21.0
+      typescript:
+        specifier: ^5.7.3
+        version: 5.9.3
+
+  services/event-access-worker:
+    dependencies:
+      '@temporalio/activity':
+        specifier: ^1.11.0
+        version: 1.15.0
+      '@temporalio/worker':
+        specifier: ^1.11.0
+        version: 1.15.0(tslib@2.8.1)
       '@unlock-events/event-access':
         specifier: workspace:*
         version: link:../../packages/event-access
+      '@unlock-events/temporal-worker-utils':
+        specifier: workspace:*
+        version: link:../../packages/temporal-worker-utils
+    devDependencies:
+      tsup:
+        specifier: ^8.3.0
+        version: 8.5.1(@swc/core@1.15.13)(postcss@8.5.6)(tsx@4.21.0)(typescript@5.9.3)(yaml@2.8.2)
+      tsx:
+        specifier: ^4.19.0
+        version: 4.21.0
+      typescript:
+        specifier: ^5.7.3
+        version: 5.9.3
+
+  services/event-manager-worker:
+    dependencies:
+      '@temporalio/worker':
+        specifier: ^1.11.0
+        version: 1.15.0(tslib@2.8.1)
+      '@temporalio/workflow':
+        specifier: ^1.11.0
+        version: 1.15.0
       '@unlock-events/event-manager':
         specifier: workspace:*
         version: link:../../packages/event-manager
+      '@unlock-events/temporal-interfaces':
+        specifier: workspace:*
+        version: link:../../packages/temporal-interfaces
+      '@unlock-events/temporal-worker-utils':
+        specifier: workspace:*
+        version: link:../../packages/temporal-worker-utils
+    devDependencies:
+      tsup:
+        specifier: ^8.3.0
+        version: 8.5.1(@swc/core@1.15.13)(postcss@8.5.6)(tsx@4.21.0)(typescript@5.9.3)(yaml@2.8.2)
+      tsx:
+        specifier: ^4.19.0
+        version: 4.21.0
+      typescript:
+        specifier: ^5.7.3
+        version: 5.9.3
+
+  services/experiment-access-worker:
+    dependencies:
+      '@temporalio/activity':
+        specifier: ^1.11.0
+        version: 1.15.0
+      '@temporalio/worker':
+        specifier: ^1.11.0
+        version: 1.15.0(tslib@2.8.1)
       '@unlock-events/experiment-access':
         specifier: workspace:*
         version: link:../../packages/experiment-access
+      '@unlock-events/temporal-worker-utils':
+        specifier: workspace:*
+        version: link:../../packages/temporal-worker-utils
+    devDependencies:
+      tsup:
+        specifier: ^8.3.0
+        version: 8.5.1(@swc/core@1.15.13)(postcss@8.5.6)(tsx@4.21.0)(typescript@5.9.3)(yaml@2.8.2)
+      tsx:
+        specifier: ^4.19.0
+        version: 4.21.0
+      typescript:
+        specifier: ^5.7.3
+        version: 5.9.3
+
+  services/extraction-engine-worker:
+    dependencies:
+      '@temporalio/activity':
+        specifier: ^1.11.0
+        version: 1.15.0
+      '@temporalio/worker':
+        specifier: ^1.11.0
+        version: 1.15.0(tslib@2.8.1)
+      '@temporalio/workflow':
+        specifier: ^1.11.0
+        version: 1.15.0
       '@unlock-events/extraction-engine':
         specifier: workspace:*
         version: link:../../packages/extraction-engine
+      '@unlock-events/temporal-interfaces':
+        specifier: workspace:*
+        version: link:../../packages/temporal-interfaces
+      '@unlock-events/temporal-worker-utils':
+        specifier: workspace:*
+        version: link:../../packages/temporal-worker-utils
+    devDependencies:
+      tsup:
+        specifier: ^8.3.0
+        version: 8.5.1(@swc/core@1.15.13)(postcss@8.5.6)(tsx@4.21.0)(typescript@5.9.3)(yaml@2.8.2)
+      tsx:
+        specifier: ^4.19.0
+        version: 4.21.0
+      typescript:
+        specifier: ^5.7.3
+        version: 5.9.3
+
+  services/ingestion-manager-worker:
+    dependencies:
+      '@temporalio/worker':
+        specifier: ^1.11.0
+        version: 1.15.0(tslib@2.8.1)
+      '@temporalio/workflow':
+        specifier: ^1.11.0
+        version: 1.15.0
       '@unlock-events/ingestion-manager':
         specifier: workspace:*
         version: link:../../packages/ingestion-manager
+      '@unlock-events/temporal-interfaces':
+        specifier: workspace:*
+        version: link:../../packages/temporal-interfaces
+      '@unlock-events/temporal-worker-utils':
+        specifier: workspace:*
+        version: link:../../packages/temporal-worker-utils
+    devDependencies:
+      tsup:
+        specifier: ^8.3.0
+        version: 8.5.1(@swc/core@1.15.13)(postcss@8.5.6)(tsx@4.21.0)(typescript@5.9.3)(yaml@2.8.2)
+      tsx:
+        specifier: ^4.19.0
+        version: 4.21.0
+      typescript:
+        specifier: ^5.7.3
+        version: 5.9.3
+
+  services/memory-worker:
+    dependencies:
+      '@temporalio/activity':
+        specifier: ^1.11.0
+        version: 1.15.0
+      '@temporalio/worker':
+        specifier: ^1.11.0
+        version: 1.15.0(tslib@2.8.1)
+      '@unlock-events/memory':
+        specifier: workspace:*
+        version: link:../../packages/memory
+      '@unlock-events/temporal-worker-utils':
+        specifier: workspace:*
+        version: link:../../packages/temporal-worker-utils
+    devDependencies:
+      tsup:
+        specifier: ^8.3.0
+        version: 8.5.1(@swc/core@1.15.13)(postcss@8.5.6)(tsx@4.21.0)(typescript@5.9.3)(yaml@2.8.2)
+      tsx:
+        specifier: ^4.19.0
+        version: 4.21.0
+      typescript:
+        specifier: ^5.7.3
+        version: 5.9.3
+
+  services/scheduler-worker:
+    dependencies:
+      '@temporalio/activity':
+        specifier: ^1.11.0
+        version: 1.15.0
+      '@temporalio/worker':
+        specifier: ^1.11.0
+        version: 1.15.0(tslib@2.8.1)
       '@unlock-events/scheduler':
         specifier: workspace:*
         version: link:../../packages/scheduler
+      '@unlock-events/temporal-worker-utils':
+        specifier: workspace:*
+        version: link:../../packages/temporal-worker-utils
+    devDependencies:
+      tsup:
+        specifier: ^8.3.0
+        version: 8.5.1(@swc/core@1.15.13)(postcss@8.5.6)(tsx@4.21.0)(typescript@5.9.3)(yaml@2.8.2)
+      tsx:
+        specifier: ^4.19.0
+        version: 4.21.0
+      typescript:
+        specifier: ^5.7.3
+        version: 5.9.3
+
+  services/source-access-worker:
+    dependencies:
+      '@temporalio/activity':
+        specifier: ^1.11.0
+        version: 1.15.0
+      '@temporalio/worker':
+        specifier: ^1.11.0
+        version: 1.15.0(tslib@2.8.1)
       '@unlock-events/source-access':
         specifier: workspace:*
         version: link:../../packages/source-access
+      '@unlock-events/temporal-worker-utils':
+        specifier: workspace:*
+        version: link:../../packages/temporal-worker-utils
+    devDependencies:
+      tsup:
+        specifier: ^8.3.0
+        version: 8.5.1(@swc/core@1.15.13)(postcss@8.5.6)(tsx@4.21.0)(typescript@5.9.3)(yaml@2.8.2)
+      tsx:
+        specifier: ^4.19.0
+        version: 4.21.0
+      typescript:
+        specifier: ^5.7.3
+        version: 5.9.3
+
+  services/web-search-worker:
+    dependencies:
+      '@temporalio/activity':
+        specifier: ^1.11.0
+        version: 1.15.0
+      '@temporalio/worker':
+        specifier: ^1.11.0
+        version: 1.15.0(tslib@2.8.1)
+      '@unlock-events/ai-gateway':
+        specifier: workspace:*
+        version: link:../../packages/ai-gateway
+      '@unlock-events/temporal-worker-utils':
+        specifier: workspace:*
+        version: link:../../packages/temporal-worker-utils
+      '@unlock-events/web-search':
+        specifier: workspace:*
+        version: link:../../packages/web-search
     devDependencies:
       tsup:
         specifier: ^8.3.0
@@ -4338,6 +4731,37 @@ snapshots:
       long: 5.3.2
       protobufjs: 7.5.4
 
+  '@temporalio/worker@1.15.0(esbuild@0.27.2)(tslib@2.8.1)':
+    dependencies:
+      '@grpc/grpc-js': 1.14.3
+      '@swc/core': 1.15.13
+      '@temporalio/activity': 1.15.0
+      '@temporalio/client': 1.15.0
+      '@temporalio/common': 1.15.0
+      '@temporalio/core-bridge': 1.15.0
+      '@temporalio/nexus': 1.15.0
+      '@temporalio/proto': 1.15.0
+      '@temporalio/workflow': 1.15.0
+      abort-controller: 3.0.0
+      heap-js: 2.7.1
+      memfs: 4.56.10(tslib@2.8.1)
+      nexus-rpc: 0.0.1
+      proto3-json-serializer: 2.0.2
+      protobufjs: 7.5.4
+      rxjs: 7.8.2
+      source-map: 0.7.6
+      source-map-loader: 4.0.2(webpack@5.105.3(@swc/core@1.15.13)(esbuild@0.27.2))
+      supports-color: 8.1.1
+      swc-loader: 0.2.7(@swc/core@1.15.13)(webpack@5.105.3(@swc/core@1.15.13)(esbuild@0.27.2))
+      unionfs: 4.6.0
+      webpack: 5.105.3(@swc/core@1.15.13)(esbuild@0.27.2)
+    transitivePeerDependencies:
+      - '@swc/helpers'
+      - esbuild
+      - tslib
+      - uglify-js
+      - webpack-cli
+
   '@temporalio/worker@1.15.0(tslib@2.8.1)':
     dependencies:
       '@grpc/grpc-js': 1.14.3
@@ -5918,6 +6342,12 @@ snapshots:
 
   source-map-js@1.2.1: {}
 
+  source-map-loader@4.0.2(webpack@5.105.3(@swc/core@1.15.13)(esbuild@0.27.2)):
+    dependencies:
+      iconv-lite: 0.6.3
+      source-map-js: 1.2.1
+      webpack: 5.105.3(@swc/core@1.15.13)(esbuild@0.27.2)
+
   source-map-loader@4.0.2(webpack@5.105.3(@swc/core@1.15.13)):
     dependencies:
       iconv-lite: 0.6.3
@@ -5992,6 +6422,12 @@ snapshots:
     dependencies:
       has-flag: 4.0.0
 
+  swc-loader@0.2.7(@swc/core@1.15.13)(webpack@5.105.3(@swc/core@1.15.13)(esbuild@0.27.2)):
+    dependencies:
+      '@swc/core': 1.15.13
+      '@swc/counter': 0.1.3
+      webpack: 5.105.3(@swc/core@1.15.13)(esbuild@0.27.2)
+
   swc-loader@0.2.7(@swc/core@1.15.13)(webpack@5.105.3(@swc/core@1.15.13)):
     dependencies:
       '@swc/core': 1.15.13
@@ -5999,6 +6435,18 @@ snapshots:
       webpack: 5.105.3(@swc/core@1.15.13)
 
   tapable@2.3.0: {}
+
+  terser-webpack-plugin@5.3.16(@swc/core@1.15.13)(esbuild@0.27.2)(webpack@5.105.3(@swc/core@1.15.13)(esbuild@0.27.2)):
+    dependencies:
+      '@jridgewell/trace-mapping': 0.3.31
+      jest-worker: 27.5.1
+      schema-utils: 4.3.3
+      serialize-javascript: 6.0.2
+      terser: 5.46.0
+      webpack: 5.105.3(@swc/core@1.15.13)(esbuild@0.27.2)
+    optionalDependencies:
+      '@swc/core': 1.15.13
+      esbuild: 0.27.2
 
   terser-webpack-plugin@5.3.16(@swc/core@1.15.13)(webpack@5.105.3(@swc/core@1.15.13)):
     dependencies:
@@ -6290,6 +6738,38 @@ snapshots:
       schema-utils: 4.3.3
       tapable: 2.3.0
       terser-webpack-plugin: 5.3.16(@swc/core@1.15.13)(webpack@5.105.3(@swc/core@1.15.13))
+      watchpack: 2.5.1
+      webpack-sources: 3.3.4
+    transitivePeerDependencies:
+      - '@swc/core'
+      - esbuild
+      - uglify-js
+
+  webpack@5.105.3(@swc/core@1.15.13)(esbuild@0.27.2):
+    dependencies:
+      '@types/eslint-scope': 3.7.7
+      '@types/estree': 1.0.8
+      '@types/json-schema': 7.0.15
+      '@webassemblyjs/ast': 1.14.1
+      '@webassemblyjs/wasm-edit': 1.14.1
+      '@webassemblyjs/wasm-parser': 1.14.1
+      acorn: 8.16.0
+      acorn-import-phases: 1.0.4(acorn@8.16.0)
+      browserslist: 4.28.1
+      chrome-trace-event: 1.0.4
+      enhanced-resolve: 5.19.0
+      es-module-lexer: 2.0.0
+      eslint-scope: 5.1.1
+      events: 3.3.0
+      glob-to-regexp: 0.4.1
+      graceful-fs: 4.2.11
+      json-parse-even-better-errors: 2.3.1
+      loader-runner: 4.3.1
+      mime-types: 2.1.35
+      neo-async: 2.6.2
+      schema-utils: 4.3.3
+      tapable: 2.3.0
+      terser-webpack-plugin: 5.3.16(@swc/core@1.15.13)(esbuild@0.27.2)(webpack@5.105.3(@swc/core@1.15.13)(esbuild@0.27.2))
       watchpack: 2.5.1
       webpack-sources: 3.3.4
     transitivePeerDependencies:

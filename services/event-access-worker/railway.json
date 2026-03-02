@@ -1,0 +1,17 @@
+{
+  "$schema": "https://railway.com/railway.schema.json",
+  "build": {
+    "builder": "RAILPACK",
+    "buildCommand": "pnpm --filter @unlock-events/event-access-worker build",
+    "watchPatterns": [
+      "/services/event-access-worker/**",
+      "/packages/event-access/**",
+      "/packages/temporal-worker-utils/**"
+    ]
+  },
+  "deploy": {
+    "startCommand": "pnpm --filter @unlock-events/event-access-worker start",
+    "restartPolicyType": "ALWAYS",
+    "restartPolicyMaxRetries": -1
+  }
+}

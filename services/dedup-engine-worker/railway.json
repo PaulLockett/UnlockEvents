@@ -1,0 +1,18 @@
+{
+  "$schema": "https://railway.com/railway.schema.json",
+  "build": {
+    "builder": "RAILPACK",
+    "buildCommand": "pnpm --filter @unlock-events/dedup-engine-worker build",
+    "watchPatterns": [
+      "/services/dedup-engine-worker/**",
+      "/packages/dedup-engine/**",
+      "/packages/temporal-worker-utils/**",
+      "/packages/temporal-interfaces/**"
+    ]
+  },
+  "deploy": {
+    "startCommand": "pnpm --filter @unlock-events/dedup-engine-worker start",
+    "restartPolicyType": "ALWAYS",
+    "restartPolicyMaxRetries": -1
+  }
+}
