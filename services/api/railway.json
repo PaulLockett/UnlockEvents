@@ -6,7 +6,7 @@
     "watchPatterns": ["/services/api/**", "/packages/**"]
   },
   "deploy": {
-    "startCommand": "pnpm --filter @unlock-events/api start",
+    "startCommand": "node services/api/dist/index.js",
     "healthcheckPath": "/health",
     "healthcheckTimeout": 30,
     "restartPolicyType": "ON_FAILURE",
