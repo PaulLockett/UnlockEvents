@@ -1,16 +1,18 @@
 {
   "$schema": "https://railway.com/railway.schema.json",
   "build": {
-    "builder": "NIXPACKS"
+    "builder": "RAILPACK",
+    "buildCommand": "pnpm --filter @unlock-events/web-search-worker build",
+    "watchPatterns": [
+      "/services/web-search-worker/**",
+      "/packages/web-search/**",
+      "/packages/ai-gateway/**",
+      "/packages/temporal-worker-utils/**"
+    ]
   },
   "deploy": {
-    "restartPolicyType": "ON_FAILURE",
-    "restartPolicyMaxRetries": 10
-  },
-  "watchPatterns": [
-    "/services/web-search-worker/**",
-    "/packages/web-search/**",
-    "/packages/ai-gateway/**",
-    "/packages/temporal-worker-utils/**"
-  ]
+    "startCommand": "pnpm --filter @unlock-events/web-search-worker start",
+    "restartPolicyType": "ALWAYS",
+    "restartPolicyMaxRetries": -1
+  }
 }
