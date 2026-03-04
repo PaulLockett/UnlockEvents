@@ -2,7 +2,7 @@
   "$schema": "https://railway.com/railway.schema.json",
   "build": {
     "builder": "RAILPACK",
-    "buildCommand": "pnpm --filter @unlock-events/scheduler-worker build",
+    "buildCommand": "pnpm --filter @unlock-events/scheduler-worker... build",
     "watchPatterns": [
       "/services/scheduler-worker/**",
       "/packages/scheduler/**",

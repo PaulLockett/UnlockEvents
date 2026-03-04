@@ -2,7 +2,7 @@
   "$schema": "https://railway.com/railway.schema.json",
   "build": {
     "builder": "RAILPACK",
-    "buildCommand": "pnpm --filter @unlock-events/web-search-worker build",
+    "buildCommand": "pnpm --filter @unlock-events/web-search-worker... build",
     "watchPatterns": [
       "/services/web-search-worker/**",
       "/packages/web-search/**",
