@@ -6,7 +6,7 @@
   "description": "E2: Extraction Engine child workflow worker",
   "scripts": {
     "dev": "tsx watch src/index.ts",
-    "build": "tsup src/index.ts --format esm",
+    "build": "tsup src/index.ts src/workflows/index.ts --format esm",
     "start": "node dist/index.js",
     "lint": "eslint src/",
     "typecheck": "tsc --noEmit",
