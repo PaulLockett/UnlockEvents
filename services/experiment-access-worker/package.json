@@ -1,9 +1,9 @@
 {
-  "name": "@unlock-events/api",
+  "name": "@unlock-events/experiment-access-worker",
   "version": "0.0.1",
   "private": true,
   "type": "module",
-  "description": "C1: Event API - REST endpoints for external consumers",
+  "description": "Temporal worker for experiment access activities",
   "scripts": {
     "dev": "tsx watch src/index.ts",
     "build": "tsup src/index.ts --format esm",
@@ -13,10 +13,10 @@
     "clean": "rm -rf dist"
   },
   "dependencies": {
-    "hono": "^4.7.0",
-    "@hono/node-server": "^1.14.0",
-    "@temporalio/client": "^1.11.0",
-    "@unlock-events/temporal-interfaces": "workspace:*"
+    "@temporalio/worker": "^1.11.0",
+    "@temporalio/activity": "^1.11.0",
+    "@unlock-events/temporal-worker-utils": "workspace:*",
+    "@unlock-events/experiment-access": "workspace:*"
   },
   "devDependencies": {
     "tsx": "^4.19.0",

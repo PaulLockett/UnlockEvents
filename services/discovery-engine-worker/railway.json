@@ -1,0 +1,18 @@
+{
+  "$schema": "https://railway.com/railway.schema.json",
+  "build": {
+    "builder": "RAILPACK",
+    "buildCommand": "pnpm --filter @unlock-events/discovery-engine-worker... build",
+    "watchPatterns": [
+      "/services/discovery-engine-worker/**",
+      "/packages/discovery-engine/**",
+      "/packages/temporal-worker-utils/**",
+      "/packages/temporal-interfaces/**"
+    ]
+  },
+  "deploy": {
+    "startCommand": "pnpm --filter @unlock-events/discovery-engine-worker start",
+    "restartPolicyType": "ON_FAILURE",
+    "restartPolicyMaxRetries": 10
+  }
+}
