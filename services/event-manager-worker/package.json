@@ -1,0 +1,27 @@
+{
+  "name": "@unlock-events/event-manager-worker",
+  "version": "0.0.1",
+  "private": true,
+  "type": "module",
+  "description": "M2: Event Manager top-level workflow worker",
+  "scripts": {
+    "dev": "tsx watch src/index.ts",
+    "build": "tsup src/index.ts src/workflows/index.ts --format esm",
+    "start": "node dist/index.js",
+    "lint": "eslint src/",
+    "typecheck": "tsc --noEmit",
+    "clean": "rm -rf dist"
+  },
+  "dependencies": {
+    "@temporalio/worker": "^1.11.0",
+    "@temporalio/workflow": "^1.11.0",
+    "@unlock-events/temporal-worker-utils": "workspace:*",
+    "@unlock-events/temporal-interfaces": "workspace:*",
+    "@unlock-events/event-manager": "workspace:*"
+  },
+  "devDependencies": {
+    "tsx": "^4.19.0",
+    "tsup": "^8.3.0",
+    "typescript": "^5.7.3"
+  }
+}

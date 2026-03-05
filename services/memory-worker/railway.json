@@ -1,0 +1,17 @@
+{
+  "$schema": "https://railway.com/railway.schema.json",
+  "build": {
+    "builder": "RAILPACK",
+    "buildCommand": "pnpm --filter @unlock-events/memory-worker... build",
+    "watchPatterns": [
+      "/services/memory-worker/**",
+      "/packages/memory/**",
+      "/packages/temporal-worker-utils/**"
+    ]
+  },
+  "deploy": {
+    "startCommand": "pnpm --filter @unlock-events/memory-worker start",
+    "restartPolicyType": "ON_FAILURE",
+    "restartPolicyMaxRetries": 10
+  }
+}

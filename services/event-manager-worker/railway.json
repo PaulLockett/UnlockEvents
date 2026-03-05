@@ -1,0 +1,18 @@
+{
+  "$schema": "https://railway.com/railway.schema.json",
+  "build": {
+    "builder": "RAILPACK",
+    "buildCommand": "pnpm --filter @unlock-events/event-manager-worker... build",
+    "watchPatterns": [
+      "/services/event-manager-worker/**",
+      "/packages/event-manager/**",
+      "/packages/temporal-worker-utils/**",
+      "/packages/temporal-interfaces/**"
+    ]
+  },
+  "deploy": {
+    "startCommand": "pnpm --filter @unlock-events/event-manager-worker start",
+    "restartPolicyType": "ON_FAILURE",
+    "restartPolicyMaxRetries": 10
+  }
+}
