@@ -39,8 +39,7 @@ export async function surfaceDuplicateCandidates(
         content: JSON.stringify({
           eventId: event.id,
           title: event.title,
-          startDate: event.startDate,
-          location: event.location,
+          startsAt: event.startsAt,
         }),
       },
     ],
