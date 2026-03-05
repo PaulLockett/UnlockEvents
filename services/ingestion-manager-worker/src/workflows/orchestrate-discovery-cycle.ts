@@ -82,6 +82,7 @@ export async function orchestrateDiscoveryCycle(
     const captureId = await captureAccess.preserveCapture(request.tenantId, {
       sourceId: request.sourceId,
       sessionId: session.sessionId,
+      url: brief.url,
       html: observation.html,
       screenshotUrl: null,
       networkLogUrl: null,

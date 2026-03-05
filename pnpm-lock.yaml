@@ -54,9 +54,18 @@ importers:
 
   packages/capture-access:
     dependencies:
+      '@supabase/supabase-js':
+        specifier: ^2.49.0
+        version: 2.95.3
       '@unlock-events/db':
         specifier: workspace:*
         version: link:../db
+      drizzle-orm:
+        specifier: ^0.38.0
+        version: 0.38.4(@opentelemetry/api@1.9.0)(@types/react@19.2.14)(postgres@3.4.8)(react@19.2.4)
+      postgres:
+        specifier: ^3.4.0
+        version: 3.4.8
     devDependencies:
       '@types/node':
         specifier: ^20.17.0
